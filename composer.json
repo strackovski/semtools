@@ -1,0 +1,31 @@
+{
+    "name": "nv/semtools",
+    "version": "0.0.1",
+    "type": "library",
+    "homepage": "http://www.nv3.org/semtools",
+    "description": "A tool for categorizing and enriching English language text based on publicly available semantic API services.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Stračkovski",
+            "email": "vlado@nv3.org",
+            "homepage": "http://www.nv3.org/semtools"
+        }
+    ],
+    "support": {
+        "email": "vlado@nv3.org",
+        "issues": "https://github.com/strackovski/semtools/issues"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "easyrdf/easyrdf": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "nv": "src/"
+        }
+    }
+}

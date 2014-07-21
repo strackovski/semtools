@@ -1,0 +1,106 @@
+<?php
+/**
+ * This file belongs to semtools project
+ *
+ * @copyright 2014 Vladimir Stračkovski
+ * @license   The MIT License (MIT) <http://choosealicense.com/licenses/mit/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or visit the link above.
+ */
+namespace nv\semtools;
+
+/**
+ * Class ApiReader
+ *
+ * Base type for classes that perform read requests to API services.
+ *
+ * @package nv\semtools
+ * @author Vladimir Stračkovski <vlado@nv3.org>
+ */
+abstract class ApiReader implements ReaderInterface
+{
+    /** @var string API key */
+    protected $apiKey;
+
+    /** @var string Base API URL */
+    protected $apiEndpoint;
+
+    /** @var string API URL Format to use with sprintf */
+    protected $apiQueryStringRequestFormat;
+
+    /** @var \nv\semtools\RequestInterface */
+    protected $request;
+
+    /**
+     * @param \nv\semtools\RequestInterface $request
+     *
+     * @return mixed
+     */
+    abstract public function read(RequestInterface $request);
+
+    /**
+     * @return mixed
+     */
+    abstract protected function executeRequest();
+
+    /**
+     * Set API key
+     *
+     * @param $key
+     *
+     * @return bool True on success, false on failure.
+     */
+    public function setApiKey($key)
+    {
+        $this->apiKey = $key;
+        return $this->apiKey === $key ? true : false;
+    }
+
+    /**
+     * Set API URL
+     *
+     * @param $url
+     *
+     * @return bool
+     */
+    public function setApiEndpoint($url)
+    {
+        $this->apiEndpoint = $url;
+        return $this->apiEndpoint === $url ? true : false;
+    }
+
+    /**
+     * Set API URL REST format
+     * Used as format for sprintf to inject parameters into the URL string.
+     *
+     * @param $format
+     *
+     * @return bool
+     */
+    public function setApiQueryStringRequestFormat($format)
+    {
+        $this->apiQueryStringRequestFormat = $format;
+        return $this->apiQueryStringRequestFormat === $format ? true : false;
+    }
+
+    /**
+     * Get API REST URL format
+     *
+     * @return mixed
+     */
+    public function getApiQueryStringRequestFormat()
+    {
+        return $this->apiQueryStringRequestFormat;
+    }
+
+    /**
+     * Get API URL
+     *
+     * @return mixed
+     */
+    public function getApiEndpoint()
+    {
+        return $this->apiEndpoint;
+    }
+}
