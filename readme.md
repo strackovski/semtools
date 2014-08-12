@@ -1,9 +1,12 @@
 semtools: toolbox for content classification and enrichment
 ======================================================================
 
-Provides read access to public semantic API services. Version 0.0.3
+Provides read access wrappers to public semantic API services. Version 0.0.4
 supports classification using the uClassify.com service and annotation
 (enrichment) using Reuters OpenCalais API.
+
+Visit [OpenCalais](www.opencalais.com) and [uClassify](www.uclassify.com)
+homepages for more information about their services and to obtain an API key.
 
 Features
 --------
