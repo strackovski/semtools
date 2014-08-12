@@ -24,7 +24,7 @@ use nv\semtools\Annotators\OpenCalais;
 $content = '';
 
 // Instantiate the reader with your API key (provided by uClassify)
-$classifier = new uClassify\UclassifyReader('0wYctA3XvxGfiH8xpFjigyPHkNs');
+$classifier = new uClassify\UclassifyReader('YOUR_API_KEY');
 
 // Create a new request with the text to be classified and the classifier to use
 $classifierRequest = new uClassify\UclassifyRequest(
@@ -37,7 +37,7 @@ $classifierResponse = $classifier->read($classifierRequest);
 echo $classifierResponse->getResponse();
 
 // Annotation
-$annotator = new OpenCalais\OpenCalaisReader('asubyt3ptak743yc8jq4hfn7');
+$annotator = new OpenCalais\OpenCalaisReader('YOUR_API_KEY');
 $annotatorRequest = new OpenCalais\OpenCalaisRequest($content);
 $annotatorResponse = $annotator->read($annotatorRequest);
 

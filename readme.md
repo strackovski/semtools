@@ -28,7 +28,7 @@ use nv\semtools\Classifiers\uClassify;
 header('Content-type: text/xml');
 
 // Instantiate the reader with your API key (provided by uClassify)
-$classifier = new uClassify\UclassifyReader('0wYctA3XvxGfiH8xpFjigyPHkNs');
+$classifier = new uClassify\UclassifyReader('YOUR_API_KEY');
 
 // Create a new request with the text to be classified and the classifier to use
 $classifierRequest = new uClassify\UclassifyRequest(
@@ -65,7 +65,7 @@ use nv\semtools\Annotators\OpenCalais;
 // The content to process
 $content = '';
 // Instantiate a new annotator instance with your API key (provided by OpenCalais)
-$annotator = new OpenCalais\OpenCalaisReader('asubyt3ptak743yc8jq4hfn7');
+$annotator = new OpenCalais\OpenCalaisReader('YOUR_API_KEY');
 
 // Create a new request with passing the content as parameter
 $annotatorRequest = new OpenCalais\OpenCalaisRequest($content);
