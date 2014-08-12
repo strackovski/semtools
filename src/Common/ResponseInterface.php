@@ -8,17 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
-namespace nv\semtools;
+namespace nv\semtools\Common;
 
 use \nv\semtools;
 
 /**
- * Class OpenCalaisReader
+ * Response Interface
  *
- * @package nv\semtools
+ * @package nv\semtools\Common
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-interface RequestInterface
+interface ResponseInterface
 {
-    public function getTextData();
+    public function getResponse();
 }

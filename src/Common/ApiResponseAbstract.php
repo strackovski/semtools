@@ -8,27 +8,38 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
-namespace nv\semtools;
+namespace nv\semtools\Common;
 
-use \nv\semtools;
+use nv\semtools;
 
 /**
- * Class OpenCalaisReader
+ * Base ApiResponse Class
  *
- * @package nv\semtools
+ * @package nv\semtools\Common
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-abstract class ApiResponse implements ResponseInterface
+abstract class ApiResponseAbstract implements ResponseInterface
 {
-    /** @var string Response data*/
-    private $response;
+    /**
+     * The response returned by API
+     *
+     * @var string Response data
+     */
+    protected $response;
 
+    /**
+     * Constructor
+     *
+     * @param mixed $responseData API response data
+     */
     public function __construct($responseData)
     {
         $this->response = $responseData;
     }
 
     /**
+     * Set response
+     *
      * @param string $response
      */
     public function setResponse($response)
@@ -37,6 +48,8 @@ abstract class ApiResponse implements ResponseInterface
     }
 
     /**
+     * Get response
+     *
      * @return string
      */
     public function getResponse()

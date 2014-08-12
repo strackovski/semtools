@@ -8,38 +8,59 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
-namespace nv\semtools;
+namespace nv\semtools\Common;
+
+use nv\semtools\Common\ReaderInterface;
+use nv\semtools\Common\RequestInterface;
 
 /**
  * Class ApiReader
  *
  * Base type for classes that perform read requests to API services.
  *
- * @package nv\semtools
+ * @package nv\semtools\Common
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-abstract class ApiReader implements ReaderInterface
+abstract class ApiReaderAbstract implements ReaderInterface
 {
-    /** @var string API key */
+    /**
+     * The API key provided by the API service provider
+     *
+     * @var string API key
+     */
     protected $apiKey;
 
-    /** @var string Base API URL */
+    /**
+     * API URL Endpoint
+     *
+     * @var string Base API URL
+     */
     protected $apiEndpoint;
 
-    /** @var string API URL Format to use with sprintf */
+    /**
+     * @var string API URL Format to use with sprintf
+     */
     protected $apiQueryStringRequestFormat;
 
-    /** @var \nv\semtools\RequestInterface */
+    /**
+     * The request
+     *
+     * @var \nv\semtools\Common\RequestInterface
+     */
     protected $request;
 
     /**
-     * @param \nv\semtools\RequestInterface $request
+     * Read data
+     *
+     * @param \nv\semtools\Common\RequestInterface
      *
      * @return mixed
      */
     abstract public function read(RequestInterface $request);
 
     /**
+     * Execute request
+     *
      * @return mixed
      */
     abstract protected function executeRequest();

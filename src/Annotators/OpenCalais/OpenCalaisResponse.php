@@ -10,15 +10,51 @@
  */
 namespace nv\semtools\Annotators\OpenCalais;
 
-use \nv\semtools;
+use nv\semtools;
 
 /**
- * Class OpenCalaisReader
+ * Class OpenCalaisResponse
  *
- * @package nv\semtools
+ * Encapsulates OpenCalais response specifics
+ *
+ * @package nv\semtools\Annotators\OpenCalais
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class OpenCalaisResponse extends semtools\ApiResponse
+class OpenCalaisResponse extends semtools\Common\ApiResponseAbstract
 {
-    // @todo Encapsulate OC response data
+    /**
+     * Parse entities from response data
+     *
+     * @return array of entities
+     */
+    public function getEntities()
+    {
+        $entities = array();
+        $lines = explode("\n", $this->response);
+        foreach ($lines as $line) {
+            if (strpos($line, '-->') === 0) {
+                break;
+            } elseif (strpos($line, '<!--') !== 0) {
+                $parts = explode(':', $line);
+                $type = $parts[0];
+                $entities = explode(',', $parts[1]);
+                foreach ($entities as $entity) {
+                    if (strlen(trim($entity)) > 0) {
+                        $entities[$type][] = trim($entity);
+                    }
+                }
+            }
+        }
+
+        if (strpos($this->response, '<SocialTag ') !== false) {
+            preg_match_all('/<SocialTag [^>]*>([^<]*)<originalValue>/', $this->response, $matches);
+            if (is_array($matches) && is_array($matches[1]) && count($matches[1]) > 0) {
+                foreach ($matches[1] as $tag) {
+                    $entities['SocialTag'][] = trim($tag);
+                }
+            }
+        }
+
+        return $entities;
+    }
 }

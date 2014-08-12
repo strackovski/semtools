@@ -8,23 +8,29 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
-namespace nv\semtools;
+namespace nv\semtools\Common;
 
-use \nv\semtools;
+use nv\semtools;
 
 /**
- * Class OpenCalaisReader
+ * Base ApiRequest Class
  *
- * @package nv\semtools
+ * @package nv\semtools\Common
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-abstract class ApiRequest implements RequestInterface
+abstract class ApiRequestAbstract implements semtools\Common\RequestInterface
 {
-    /** @var string */
-    private $textData;
+    /**
+     * The text to analyze
+     *
+     * @var string
+     */
+    protected $textData;
 
     /**
-     * @param $textData
+     * Constructor
+     *
+     * @param string $textData The text to analyze
      */
     public function __construct($textData)
     {
@@ -32,6 +38,8 @@ abstract class ApiRequest implements RequestInterface
     }
 
     /**
+     * Get text data
+     *
      * @return string
      */
     public function getTextData()
@@ -40,6 +48,8 @@ abstract class ApiRequest implements RequestInterface
     }
 
     /**
+     * Set text data
+     *
      * @param $data
      *
      * @return mixed

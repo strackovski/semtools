@@ -10,15 +10,17 @@
  */
 namespace nv\semtools\Classifiers\uClassify;
 
-use \nv\semtools;
+use nv\semtools;
 
 /**
- * Class OpenCalaisReader
+ * uClassify Response
  *
- * @package nv\semtools
+ * Encapsulates uClassify response specifics
+ *
+ * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class UclassifyResponse extends semtools\ApiResponse
+class UclassifyResponse extends semtools\Common\ApiResponseAbstract
 {
-    // @todo Encapsulate OC response data
+    // @todo Encapsulate response data: parse XML
 }

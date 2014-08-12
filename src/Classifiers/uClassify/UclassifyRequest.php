@@ -10,38 +10,48 @@
  */
 namespace nv\semtools\Classifiers\uClassify;
 
-use \nv\semtools;
+use nv\semtools;
 
 /**
- * Class UclassifyRequest
+ * uClassify Request
  *
- * @package nv\semtools
+ * Encapsulates uClassify request specifics
+ *
+ * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class UclassifyRequest extends semtools\ApiRequest
+class UclassifyRequest extends semtools\Common\ApiRequestAbstract
 {
     /**
-     * @var
+     * The classifier to use for classification
+     *
+     * @var string
      */
     private $classifier;
 
     /**
-     * @var
+     * Response format
+     *
+     * @var string
      */
     private $responseFormat;
 
     /**
-     * @var
+     * API version
+     *
+     * @var string
      */
     private $apiVersion;
 
     /**
-     * @param $textData
+     * Constructor
+     *
+     * @param string $textData Text to classify
      */
     public function __construct($textData)
     {
         parent::__construct($textData);
-        // @todo set defaults
+        $this->responseFormat = 'xml';
     }
 
     /**

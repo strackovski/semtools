@@ -10,42 +10,62 @@
  */
 namespace nv\semtools\Annotators\OpenCalais;
 
-use \nv\semtools;
+use nv\semtools\Exception;
+use nv\semtools\Common;
 
 /**
  * Class OpenCalaisReader
  *
- * @package nv\semtools
+ * Provides read access to Reuters OpenCalais API service.
+ *
+ * Calais is a rapidly growing toolkit of capabilities that allow you to
+ * readily incorporate state-of-the-art semantic functionality within your blog,
+ * content management system, website or application.
+ *
+ * Read more at http://www.opencalais.com/
+ *
+ * @package nv\semtools\Annotators\OpenCalais
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class OpenCalaisReader extends semtools\ApiReader
+class OpenCalaisReader extends Common\ApiReaderAbstract
 {
-    /** @var \nv\semtools\Annotators\OpenCalais\OpenCalaisRequest */
+    /**
+     * Request
+     *
+     * @var \nv\semtools\Annotators\OpenCalais\OpenCalaisRequest
+     */
     protected $request;
 
     /**
      * Constructor
      *
-     * @param $api_key
+     * @param $apiKey
+     *
+     * @throws \nv\semtools\Exception\ServiceReaderException
+     * @internal param $api_key
      */
-    public function __construct($api_key)
+    public function __construct($apiKey)
     {
-        $this->apiKey = $api_key;
-        $this->apiEndpoint = 'http://api.opencalais.com/tag/rs/enrich/';
+        if (empty($apiKey)) {
+            throw new Exception\ServiceReaderException('API key cannot be empty.');
+        }
+        $this->apiKey = $apiKey;
+        $this->apiEndpoint = 'http://api.opencalais.com/enlighten/rest/';
         $this->apiQueryStringRequestFormat = 'licenseID=%s&content=%s&paramsXML=%s';
-        $this->responseFormat = 'xml/rdf';
     }
 
     /**
-     * @param semtools\RequestInterface $request
+     * Read API
      *
-     * @return mixed|OpenCalaisResponse
-     * @throws \Exception
+     * @param Common\RequestInterface $request
+     *
+     * @throws \InvalidArgumentException
+     * @return OpenCalaisResponse
      */
-    public function read(semtools\RequestInterface $request)
+    public function read(Common\RequestInterface $request)
     {
         if (!$request instanceof OpenCalaisRequest) {
-            throw new \Exception("Expected instance of OpenCalaisRequest, got ".get_class($request));
+            throw new \InvalidArgumentException("Expected instance of OpenCalaisRequest, got ".get_class($request));
         }
         $this->request = $request;
 
@@ -53,25 +73,29 @@ class OpenCalaisReader extends semtools\ApiReader
     }
 
     /**
-     * @return mixed|OpenCalaisResponse
+     * Execute read request
+     * @throws \nv\semtools\Exception\ServiceReaderException
+     * @return OpenCalaisResponse
      */
     protected function executeRequest()
     {
-        $options = array(
-            "x-calais-licenseID" => $this->apiKey,
-            "Content-Type" => $this->request->getContentType(),
-            "Accept" => $this->request->getAcceptFormat(),
-            "enableMetadataType" => $this->request->getEnableMetadataType(),
-            "calculateRelevanceScore" => $this->request->getCalculateRelevanceScore()
-        );
+        $options = 'licenseID=' . urlencode($this->apiKey);
+        $options .= '&paramsXML=' . urlencode($this->request->generateXMLRequestString());
+        $options .= '&content=' . urlencode($this->request->getTextData());
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $this->getApiEndpoint());
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $options);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request->getTextData());
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $options);
+        curl_setopt($ch, CURLOPT_POST, 1);
         $response = curl_exec($ch);
         curl_close($ch);
+
+        if (strpos($response, "<Exception>") !== false) {
+            preg_match("/<Exception\>(.*)<\/Exception>/mu", $response, $matches);
+            throw new Exception\ServiceReaderException($matches[1]);
+        }
 
         return new OpenCalaisResponse($response);
     }

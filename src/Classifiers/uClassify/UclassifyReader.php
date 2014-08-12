@@ -10,7 +10,11 @@
  */
 namespace nv\semtools\Classifiers\uClassify;
 
-use \nv\semtools;
+
+use nv\semtools\Common\ApiReaderAbstract;
+use nv\semtools\Common\RequestInterface;
+use nv\semtools\Classifiers\uClassify;
+use nv\semtools\Exception;
 
 /**
  * Class UclassifyReader
@@ -21,15 +25,27 @@ use \nv\semtools;
  * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class UclassifyReader extends semtools\ApiReader
+class UclassifyReader extends ApiReaderAbstract
 {
-    /** @var string Version of the API to use */
+    /**
+     * Version of the API to use
+     *
+     * @var string
+     */
     protected $apiVersion;
 
-    /** @var array List of valid classifiers and their namespaces */
+    /**
+     * List of valid classifiers and their namespaces
+     *
+     * @var array
+     */
     protected $classifiers;
 
-    /** @var \nv\semtools\Classifiers\uClassify\DataUpdater */
+    /**
+     * Keeps list of classifiers in sync with provider
+     *
+     * @var \nv\semtools\Classifiers\uClassify\DataUpdater
+     */
     protected $apiUpdater;
 
     /** @var \nv\semtools\Classifiers\uClassify\UclassifyRequest */
@@ -46,8 +62,9 @@ class UclassifyReader extends semtools\ApiReader
         $this->apiVersion = '1.01';
         $this->apiQueryStringRequestFormat = '%s%s/%s/ClassifyText?readkey=%s&text=%s&version=%s%s';
         $this->apiEndpoint = 'http://uclassify.com/browse/';
-        $this->apiUpdater = new \nv\semtools\Classifiers\uClassify\DataUpdater();
+        $this->apiUpdater = new uClassify\DataUpdater();
 
+        // Some default classifiers
         $this->classifiers = array(
             'uClassify' => array(
                 'Sentiment',
@@ -69,15 +86,17 @@ class UclassifyReader extends semtools\ApiReader
     }
 
     /**
-     * @param semtools\RequestInterface $request
+     * Read API
      *
-     * @return UclassifyResponse
-     * @throws \Exception
+     * @param \nv\semtools\Common\RequestInterface $request
+     *
+     * @return uClassify\UclassifyResponse
+     * @throws \InvalidArgumentException
      */
-    public function read(semtools\RequestInterface $request)
+    public function read(RequestInterface $request)
     {
         if (!$request instanceof UclassifyRequest) {
-            throw new \Exception("Expected instance of UclassifyRequest, got ".get_class($request));
+            throw new \InvalidArgumentException("Expected instance of UclassifyRequest, got ".get_class($request));
         }
         $this->request = $request;
 
@@ -85,15 +104,17 @@ class UclassifyReader extends semtools\ApiReader
     }
 
     /**
-     * @throws \Exception
-     * @return UclassifyResponse
+     * Execute read request
+     *
+     * @throws Exception\ServiceReaderException
+     * @return mixed|UclassifyResponse
      */
     protected function executeRequest()
     {
         $classifier = explode('/', $this->request->getClassifier());
 
-        if (!$this->classifierExists($classifier)) {
-            throw new \Exception("Classifier {$classifier} does not exist");
+        if (!$this->classifierExists($this->request->getClassifier())) {
+            throw new Exception\ServiceReaderException("Classifier {$this->request->getClassifier()} does not exist");
         }
 
         $queryURL = sprintf(
@@ -113,6 +134,11 @@ class UclassifyReader extends semtools\ApiReader
         curl_setopt($ch, CURLOPT_URL, $queryURL);
         $response = curl_exec($ch);
         curl_close($ch);
+
+        if (strpos($response, "<Exception>") !== false) {
+            preg_match("/<Exception\>(.*)<\/Exception>/mu", $response, $matches);
+            throw new Exception\ServiceReaderException($matches[1]);
+        }
 
         return new UclassifyResponse($response);
     }
