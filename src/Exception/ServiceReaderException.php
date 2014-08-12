@@ -14,6 +14,7 @@ use nv\semtools;
 
 /**
  * Class ServiceReaderException
+ *
  * @package nv\semtools\Exception
  */
 class ServiceReaderException extends \Exception

@@ -8,8 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
-namespace nv\semtools\Classifiers\uClassify;
 
+namespace nv\semtools\Classifiers\uClassify;
 
 use nv\semtools\Common\ApiReaderAbstract;
 use nv\semtools\Common\RequestInterface;
@@ -19,9 +19,10 @@ use nv\semtools\Exception;
 /**
  * Class UclassifyReader
  *
- * A simple wrapper for the uClassify API enables text classification using
+ * A wrapper for the uClassify API enables text classification using
  * any of the available classifiers provided on uClassifiy.com.
  *
+ * @link http://www.uclassify.com/browse
  * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
@@ -64,7 +65,6 @@ class UclassifyReader extends ApiReaderAbstract
         $this->apiEndpoint = 'http://uclassify.com/browse/';
         $this->apiUpdater = new uClassify\DataUpdater();
 
-        // Some default classifiers
         $this->classifiers = array(
             'uClassify' => array(
                 'Sentiment',

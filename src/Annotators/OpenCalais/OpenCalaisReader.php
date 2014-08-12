@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
+
 namespace nv\semtools\Annotators\OpenCalais;
 
 use nv\semtools\Exception;
@@ -22,8 +23,7 @@ use nv\semtools\Common;
  * readily incorporate state-of-the-art semantic functionality within your blog,
  * content management system, website or application.
  *
- * Read more at http://www.opencalais.com/
- *
+ * @link at http://www.opencalais.com/
  * @package nv\semtools\Annotators\OpenCalais
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
@@ -41,8 +41,7 @@ class OpenCalaisReader extends Common\ApiReaderAbstract
      *
      * @param $apiKey
      *
-     * @throws \nv\semtools\Exception\ServiceReaderException
-     * @internal param $api_key
+     * @throws Exception\ServiceReaderException
      */
     public function __construct($apiKey)
     {
@@ -74,14 +73,15 @@ class OpenCalaisReader extends Common\ApiReaderAbstract
 
     /**
      * Execute read request
-     * @throws \nv\semtools\Exception\ServiceReaderException
+     *
+     * @throws Exception\ServiceReaderException
      * @return OpenCalaisResponse
      */
     protected function executeRequest()
     {
-        $options = 'licenseID=' . urlencode($this->apiKey);
+        $options  = 'licenseID='  . urlencode($this->apiKey);
         $options .= '&paramsXML=' . urlencode($this->request->generateXMLRequestString());
-        $options .= '&content=' . urlencode($this->request->getTextData());
+        $options .= '&content='   . urlencode($this->request->getTextData());
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

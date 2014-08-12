@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
+
 namespace nv\semtools\Classifiers\uClassify;
 
-use nv\semtools;
+use nv\semtools\Common;
 
 /**
  * uClassify Request
@@ -20,7 +21,7 @@ use nv\semtools;
  * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class UclassifyRequest extends semtools\Common\ApiRequestAbstract
+class UclassifyRequest extends Common\ApiRequestAbstract
 {
     /**
      * The classifier to use for classification
@@ -47,7 +48,7 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
      * Constructor
      *
      * @param string $textData Text to classify
-     * @param        $classifier
+     * @param string $classifier
      */
     public function __construct($textData, $classifier)
     {
@@ -57,6 +58,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Set API version
+     *
      * @param $apiVersion
      */
     public function setApiVersion($apiVersion)
@@ -65,6 +68,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Get API version
+     *
      * @return mixed
      */
     public function getApiVersion()
@@ -73,6 +78,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Set classifier
+     *
      * @param $classifier
      */
     public function setClassifier($classifier)
@@ -81,6 +88,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Get classifier
+     *
      * @return mixed
      */
     public function getClassifier()
@@ -89,6 +98,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Set response format
+     *
      * @param $responseFormat
      */
     public function setResponseFormat($responseFormat)
@@ -97,6 +108,8 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Get response format
+     *
      * @return mixed
      */
     public function getResponseFormat()

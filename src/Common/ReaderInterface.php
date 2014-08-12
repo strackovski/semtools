@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
+
 namespace nv\semtools\Common;
 
 /**
@@ -20,5 +21,12 @@ namespace nv\semtools\Common;
  */
 interface ReaderInterface
 {
+    /**
+     * Read API with provided request
+     *
+     * @param RequestInterface $request Request parameters
+     *
+     * @return mixed
+     */
     public function read(RequestInterface $request);
 }

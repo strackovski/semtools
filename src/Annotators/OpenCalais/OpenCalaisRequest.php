@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
+
 namespace nv\semtools\Annotators\OpenCalais;
 
-use nv\semtools;
+use nv\semtools\Common;
 
 /**
  * Class OpenCalaisRequest
@@ -20,7 +21,7 @@ use nv\semtools;
  * @package nv\semtools\Annotators\OpenCalais
  * @author Vladimir Stračkovski <vlado@nv3.org>
  */
-class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
+class OpenCalaisRequest extends Common\ApiRequestAbstract
 {
     /**
      * License ID provided by API provider
@@ -106,6 +107,7 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     /**
      * Generate XML request string from parameters
      *
+     * @link http://www.opencalais.com/documentation/calais-web-service-api/forming-api-calls/input-parameters
      * @return string
      */
     public function generateXMLRequestString()
@@ -118,7 +120,7 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
             $enabledMetadataTypes[] = 'SocialTags';
         }
 
-        $xml = '<c:params xmlns:c="http://s.opencalais.com/1/pred/" ';
+        $xml  = '<c:params xmlns:c="http://s.opencalais.com/1/pred/" ';
         $xml .= 'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';
         $xml .= '<c:processingDirectives ';
         $xml .= 'c:contentType="' . $this->contentType . '" ';
@@ -264,10 +266,15 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     /**
      * Set license ID
      *
-     * @param string $licenseId
+     * @param string $licenseId your API key
+     *
+     * @throws \InvalidArgumentException if license ID is empty
      */
     public function setLicenseId($licenseId)
     {
+        if (empty($licenseId)) {
+            throw new \InvalidArgumentException('License ID cannot be empty.');
+        }
         $this->licenseId = $licenseId;
     }
 
@@ -282,6 +289,8 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Get if distribution is allowed
+     *
      * @param boolean $allowDistribution
      */
     public function setAllowDistribution($allowDistribution)
@@ -290,6 +299,8 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Set distribution rule
+     *
      * @return boolean
      */
     public function getAllowDistribution()
@@ -298,6 +309,8 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Set allow search rule
+     *
      * @param boolean $allowSearch
      */
     public function setAllowSearch($allowSearch)
@@ -306,6 +319,8 @@ class OpenCalaisRequest extends semtools\Common\ApiRequestAbstract
     }
 
     /**
+     * Get if search is allowed
+     *
      * @return boolean
      */
     public function getAllowSearch()

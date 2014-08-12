@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or visit the link above.
  */
+
 namespace nv\semtools\Classifiers\uClassify;
 
 use nv\semtools\Classifiers\uClassify\UclassifyReader;
@@ -35,6 +36,7 @@ class DataUpdater
     {
         $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
+        // @todo [0.0.4] Cache
         $dom->loadHTML(file_get_contents('http://www.uclassify.com/browse'));
 
         $xp = new \DOMXPath($dom);
