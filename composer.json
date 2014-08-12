@@ -1,9 +1,9 @@
 {
     "name": "nv/semtools",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "library",
     "homepage": "http://www.nv3.org/semtools",
-    "description": "A tool for categorizing and enriching English language text based on publicly available semantic API services.",
+    "description": "A tool for classifying and enriching English language text based on publicly available semantic API services.",
     "license": "MIT",
     "authors": [
         {

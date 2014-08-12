@@ -47,11 +47,13 @@ class UclassifyRequest extends semtools\Common\ApiRequestAbstract
      * Constructor
      *
      * @param string $textData Text to classify
+     * @param        $classifier
      */
-    public function __construct($textData)
+    public function __construct($textData, $classifier)
     {
         parent::__construct($textData);
         $this->responseFormat = 'xml';
+        $this->classifier = $classifier;
     }
 
     /**

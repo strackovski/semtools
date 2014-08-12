@@ -1,10 +1,7 @@
 .DS_Store
 .idea/
-var/logs/*
-var/cache/orm/proxies/*
-var/cache/twig/*
 vendor/
 docs/*
 composer.lock
 web/
-src/Extractors
+examples/index_dev.php
