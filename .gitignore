@@ -5,3 +5,4 @@ docs/*
 composer.lock
 web/
 examples/index_dev.php
+phpdoc.xml
