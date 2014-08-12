@@ -5,7 +5,7 @@ Provides read access wrappers to public semantic API services. Version 0.0.4
 supports classification using the uClassify.com service and annotation
 (enrichment) using Reuters OpenCalais API.
 
-Visit [OpenCalais](www.opencalais.com) and [uClassify](www.uclassify.com)
+Visit [OpenCalais](http://www.opencalais.com) and [uClassify](http://www.uclassify.com)
 homepages for more information about their services and to obtain an API key.
 
 Features
@@ -18,7 +18,7 @@ How-to & Examples
 ------------------
 
 Below is a basic example, also available in examples/index.php file. For detailed options,
-please see the [API documentation](www.nv3.org/semtools/api).
+please see the [API documentation](http://www.nv3.org/semtools/api).
 
 ### Classification
 
@@ -85,7 +85,7 @@ Prints:
 ...
 ```
 
-Check out [OpenCalais homepage](www.opencalais.com) for details on different response formats.
+Check out [OpenCalais homepage](http://www.opencalais.com) for details on different response formats.
 
 License
 ----------
