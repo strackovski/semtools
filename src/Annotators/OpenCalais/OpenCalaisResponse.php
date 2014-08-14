@@ -38,10 +38,12 @@ class OpenCalaisResponse extends semtools\Common\ApiResponseAbstract
             } elseif (strpos($line, '<!--') !== 0) {
                 $parts = explode(':', $line);
                 $type = $parts[0];
-                $entities = explode(',', $parts[1]);
-                foreach ($entities as $entity) {
-                    if (strlen(trim($entity)) > 0) {
-                        $entities[$type][] = trim($entity);
+                if (count($parts) > 1) {
+                    $entities = explode(',', $parts[1]);
+                    foreach ($entities as $entity) {
+                        if (strlen(trim($entity)) > 0) {
+                            $entities[$type][] = trim($entity);
+                        }
                     }
                 }
             }
