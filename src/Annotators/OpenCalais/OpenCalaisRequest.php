@@ -143,11 +143,12 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
      *
      * @param string $outputFormat
      *
+     * @return $this
      * @throws \InvalidArgumentException if provided output format is illegal
      */
     public function setOutputFormat($outputFormat)
     {
-        $allowedTypes = array(
+        $allowedFormats = array(
             'xml/rdf',
             'text/simple',
             'text/microformats',
@@ -155,13 +156,14 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
             'text/n3'
         );
 
-        if (!in_array(strtolower($outputFormat), $allowedTypes)) {
+        if (!in_array(strtolower($outputFormat), $allowedFormats)) {
             throw new \InvalidArgumentException(
-                "Illegal output format, allowed output formats are " . implode(', ', $allowedTypes)
+                "Illegal output format, allowed output formats are " . implode(', ', $allowedFormats)
             );
         }
-
         $this->outputFormat = $outputFormat;
+
+        return $this;
     }
 
     /**
@@ -205,10 +207,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
      * Enable/disable relevance calculation
      *
      * @param boolean $calculateRelevanceScore
+     * @return $this
      */
     public function setCalculateRelevanceScore($calculateRelevanceScore)
     {
         $this->calculateRelevanceScore = $calculateRelevanceScore;
+
+        return $this;
     }
 
     /**
@@ -233,10 +238,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
 
     /**
      * @param boolean $enableGenericRelations
+     * @return $this
      */
     public function setEnableGenericRelations($enableGenericRelations)
     {
         $this->enableGenericRelations = $enableGenericRelations;
+
+        return $this;
     }
 
     /**
@@ -249,10 +257,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
 
     /**
      * @param boolean $enableSocialTags
+     * @return $this
      */
     public function setEnableSocialTags($enableSocialTags)
     {
         $this->enableSocialTags = $enableSocialTags;
+
+        return $this;
     }
 
     /**
@@ -268,6 +279,7 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
      *
      * @param string $licenseId your API key
      *
+     * @return $this
      * @throws \InvalidArgumentException if license ID is empty
      */
     public function setLicenseId($licenseId)
@@ -276,6 +288,8 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
             throw new \InvalidArgumentException('License ID cannot be empty.');
         }
         $this->licenseId = $licenseId;
+
+        return $this;
     }
 
     /**
@@ -292,10 +306,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
      * Get if distribution is allowed
      *
      * @param boolean $allowDistribution
+     * @return $this
      */
     public function setAllowDistribution($allowDistribution)
     {
         $this->allowDistribution = $allowDistribution;
+
+        return $this;
     }
 
     /**
@@ -312,10 +329,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
      * Set allow search rule
      *
      * @param boolean $allowSearch
+     * @return $this
      */
     public function setAllowSearch($allowSearch)
     {
         $this->allowSearch = $allowSearch;
+
+        return $this;
     }
 
     /**
@@ -330,10 +350,13 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
 
     /**
      * @param boolean $docRDFaccessible
+     * @return $this
      */
     public function setDocRDFaccessible($docRDFaccessible)
     {
         $this->docRDFaccessible = $docRDFaccessible;
+
+        return $this;
     }
 
     /**
