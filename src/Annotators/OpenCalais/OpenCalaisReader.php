@@ -97,6 +97,6 @@ class OpenCalaisReader extends Common\ApiReaderAbstract
             throw new Exception\ServiceReaderException($matches[1]);
         }
 
-        return new OpenCalaisResponse($response);
+        return new OpenCalaisResponse($response, $this->request);
     }
 }
