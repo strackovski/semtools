@@ -170,13 +170,19 @@ class UclassifyReader extends ApiReaderAbstract
     private function classifierExists($classifier)
     {
         if (strpos($classifier, '/') !== false) {
-            $classifierArray = explode('/', $classifier);
+            $classifierArray = array_map('strtolower', explode('/', $classifier));
+            $testArray = array_change_key_case($this->classifiers);
 
-            if (!array_key_exists($classifierArray[0], $this->classifiers)) {
+            // Remap classifiers list to lowercase before validation
+            foreach ($testArray as $key => $values) {
+                $testArray [$key] = array_map('strtolower', $values);
+            }
+
+            if (!array_key_exists($classifierArray[0], $testArray)) {
                 throw new \Exception("Classifier namespace {$classifierArray[0]} does not exist in Classifiers list");
             }
 
-            if (!in_array($classifierArray[1], $this->classifiers[$classifierArray[0]])) {
+            if (!in_array($classifierArray[1], $testArray[$classifierArray[0]])) {
                 throw new \Exception("Classifier {$classifierArray[1]} does not exist in Classifiers list");
             }
 
