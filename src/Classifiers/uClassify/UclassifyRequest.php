@@ -54,6 +54,7 @@ class UclassifyRequest extends Common\ApiRequestAbstract
     {
         parent::__construct($textData);
         $this->responseFormat = 'xml';
+        $this->apiVersion = '1.0';
         $this->classifier = $classifier;
     }
 

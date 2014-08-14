@@ -49,16 +49,29 @@ class UclassifyReader extends ApiReaderAbstract
      */
     protected $apiUpdater;
 
-    /** @var \nv\semtools\Classifiers\uClassify\UclassifyRequest */
+    /**
+     * Request
+     *
+     * @var \nv\semtools\Classifiers\uClassify\UclassifyRequest
+     */
     protected $request;
+
+    /**
+     * Debug mode enables auto-update, so construction may take longer to finish
+     *
+     * @var bool
+     */
+    protected $debug;
 
     /**
      * Constructor
      *
-     * @param $api_key
+     * @param string $api_key  Your API service key
+     * @param bool   $debug    Debug mode
      */
-    public function __construct($api_key)
+    public function __construct($api_key, $debug = false)
     {
+        $this->debug = $debug;
         $this->apiKey = $api_key;
         $this->apiVersion = '1.01';
         $this->apiQueryStringRequestFormat = '%s%s/%s/ClassifyText?readkey=%s&text=%s&version=%s%s';
@@ -82,7 +95,10 @@ class UclassifyReader extends ApiReaderAbstract
                 'Tonality'
             )
         );
-        $this->apiUpdater->update($this);
+
+        if ($this->debug) {
+            $this->apiUpdater->update($this);
+        }
     }
 
     /**
