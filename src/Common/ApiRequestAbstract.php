@@ -48,6 +48,8 @@ abstract class ApiRequestAbstract implements semtools\Common\RequestInterface
         return $this->textData;
     }
 
+    abstract public function getResponseFormat();
+
     /**
      * Set text data
      *
