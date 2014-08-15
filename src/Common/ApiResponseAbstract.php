@@ -28,15 +28,33 @@ abstract class ApiResponseAbstract implements ResponseInterface
      */
     protected $response;
 
+    protected $responseRaw;
+
+    /**
+     * @var null
+     */
+    protected $request;
+
     /**
      * Constructor
      *
      * @param mixed $responseData API response data
+     * @param   $request
      */
-    public function __construct($responseData)
+    public function __construct($responseData, ApiRequestAbstract $request = null)
     {
-        $this->response = $responseData;
+        $this->responseRaw = $responseData;
+        $this->request = $request;
+        $this->response = $this->init();
     }
+
+    /**
+     * A concrete Response class should implement an initialization method
+     * to perform provider specific response parsing.
+     *
+     * @return mixed
+     */
+    abstract protected function init();
 
     /**
      * Set response
@@ -56,5 +74,35 @@ abstract class ApiResponseAbstract implements ResponseInterface
     public function getResponse()
     {
         return $this->response;
+    }
+
+    public function getResponseRaw()
+    {
+        return $this->responseRaw;
+    }
+
+    /**
+     * @param \SimpleXMLElement $parent
+     * @param                   $xml
+     * @param bool              $before
+     *
+     * @return bool
+     */
+    protected function simplexmlImportXml(\SimpleXMLElement $parent, $xml, $before = false)
+    {
+        $xml = (string)$xml;
+        if ($nodata = !strlen($xml) or $parent[0] == null) {
+            return $nodata;
+        }
+
+        $node = dom_import_simplexml($parent);
+        $fragment = $node->ownerDocument->createDocumentFragment();
+        $fragment->appendXML($xml);
+
+        if ($before) {
+            return (bool)$node->parentNode->insertBefore($fragment, $node);
+        }
+
+        return (bool)$node->appendChild($fragment);
     }
 }
