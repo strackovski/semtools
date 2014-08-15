@@ -12,6 +12,7 @@
 namespace nv\semtools\Annotators\OpenCalais;
 
 use nv\semtools;
+use nv\semtools\Exception\ServiceReaderException;
 
 /**
  * Class OpenCalaisResponse
@@ -20,44 +21,73 @@ use nv\semtools;
  *
  * @package nv\semtools\Annotators\OpenCalais
  * @author Vladimir Stračkovski <vlado@nv3.org>
+ * @todo Refactor to Interpreter classes
  */
 class OpenCalaisResponse extends semtools\Common\ApiResponseAbstract
 {
     /**
-     * Parse entities from response data
+     * Get entities from response data according to response format
      *
+     * @throws \nv\semtools\Exception\ServiceReaderException
      * @return array of entities
      */
-    public function getEntities()
+    protected function init()
     {
-        $entities = array();
-        $lines = explode("\n", $this->response);
-        foreach ($lines as $line) {
-            if (strpos($line, '-->') === 0) {
+        $result = array();
+
+        switch (strtolower($this->request->getResponseFormat())) {
+            case 'xml/rdf':
                 break;
-            } elseif (strpos($line, '<!--') !== 0) {
-                $parts = explode(':', $line);
-                $type = $parts[0];
-                if (count($parts) > 1) {
-                    $entities = explode(',', $parts[1]);
-                    foreach ($entities as $entity) {
-                        if (strlen(trim($entity)) > 0) {
-                            $entities[$type][] = trim($entity);
+
+            case 'text/microformats':
+                break;
+
+            case 'application/json':
+                // @todo Parse array !
+                $result = json_decode($this->responseRaw, 1);
+                if (array_key_exists('doc', $result)) {
+                    unset($result['doc']);
+                }
+                // $result = json_encode($this->responseRaw);
+                break;
+
+            case 'text/simple':
+                $lines = explode("\n", $this->responseRaw);
+                foreach ($lines as $line) {
+                    if (strpos($line, '-->') === 0) {
+                        break;
+                    } elseif (strpos($line, '<!--') !== 0) {
+                        $parts = explode(':', $line);
+                        $type = $parts[0];
+                        if (count($parts) > 1) {
+                            $result = explode(',', $parts[1]);
+                            foreach ($result as $entity) {
+                                if (strlen(trim($entity)) > 0) {
+                                    $result[$type][] = trim($entity);
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
 
-        if (strpos($this->response, '<SocialTag ') !== false) {
-            preg_match_all('/<SocialTag [^>]*>([^<]*)<originalValue>/', $this->response, $matches);
-            if (is_array($matches) && is_array($matches[1]) && count($matches[1]) > 0) {
-                foreach ($matches[1] as $tag) {
-                    $entities['SocialTag'][] = trim($tag);
+                if (strpos($this->response, '<SocialTag ') !== false) {
+                    preg_match_all('/<SocialTag [^>]*>([^<]*)<originalValue>/', $this->response, $matches);
+                    if (is_array($matches) && is_array($matches[1]) && count($matches[1]) > 0) {
+                        foreach ($matches[1] as $tag) {
+                            $result['SocialTag'][] = trim($tag);
+                        }
+                    }
                 }
-            }
+                break;
+
+            case 'text/n3':
+                break;
+
+            default:
+                throw new ServiceReaderException('Unsupported response type.');
+                break;
         }
 
-        return $entities;
+        return $result;
     }
 }

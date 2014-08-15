@@ -104,6 +104,11 @@ class OpenCalaisRequest extends Common\ApiRequestAbstract
         $this->allowSearch = false;
     }
 
+    public function getResponseFormat()
+    {
+        return $this->outputFormat;
+    }
+
     /**
      * Generate XML request string from parameters
      *
