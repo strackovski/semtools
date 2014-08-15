@@ -11,6 +11,8 @@
 namespace nv\semtools\Classifiers\uClassify;
 
 use nv\semtools;
+use nv\semtools\Common\ApiResponseAbstract;
+use nv\semtools\Exception\ServiceReaderException;
 
 /**
  * uClassify Response
@@ -19,31 +21,70 @@ use nv\semtools;
  *
  * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
+ * @todo Refactor to Interpreter classes
  */
-class UclassifyResponse extends semtools\Common\ApiResponseAbstract
+class UclassifyResponse extends ApiResponseAbstract
 {
     /**
-     * Get classification data as PHP array
+     * Iterate through response data and aggregate each classifier's response
      *
-     * @return array
+     * @return mixed|string
      * @throws \nv\semtools\Exception\ServiceReaderException
      */
-    public function getClassification()
+    protected function init()
     {
-        $xml = simplexml_load_string($this->response);
-        $result = array();
+        if ($this->request->getResponseFormat() == 'xml') {
+            $aggregated = new \SimpleXMLElement('<response/>');
+            foreach ($this->responseRaw as $name => $response) {
+                $child = $aggregated->addChild('classification');
+                $child->addAttribute('classifier', $name);
+                $xml = simplexml_load_string($response);
 
-        if ($xml instanceof \SimpleXMLElement) {
-            if ((string) $xml->status->attributes()->success == 'true') {
+                if (! $xml instanceof \SimpleXMLElement) {
+                    throw new ServiceReaderException('Failed parsing XML response.');
+                }
+
+                if ((string) $xml->status->attributes()->success !== 'true') {
+                    throw new ServiceReaderException($xml->status->attributes()->statusCode);
+                }
+
                 foreach ($xml->readCalls->classify as $classify) {
+                    $child->addAttribute('textCoverage', $classify->classification->attributes()->textCoverage);
                     foreach ($classify->classification->class as $class) {
-                        $result[strtolower($class->attributes()->className)] = (float) $class->attributes()->p;
+                        $this->simplexmlImportXml($child, $class->asXML());
                     }
                 }
-                return $result;
             }
-            throw new semtools\Exception\ServiceReaderException($xml->status->attributes()->statusCode);
+
+            return $aggregated->asXML();
         }
-        throw new semtools\Exception\ServiceReaderException('Failed parsing XML response.');
+
+        if ($this->request->getResponseFormat() == 'json') {
+            $aggregated = array();
+            foreach ($this->responseRaw as $name => $response) {
+                $current = json_decode($response, 1);
+
+                if (! array_key_exists('success', $current)) {
+                    throw new ServiceReaderException('Unable to complete request');
+                }
+
+                if ($current['success'] !== true) {
+                    throw new ServiceReaderException($current['statusCode'] . ' ' . $current['errorMessage']);
+                }
+
+                array_key_exists('textCoverage', $current) ? '' : $current['textCoverage'] = null;
+                array_key_exists('cls1', $current) ? '' : $current['cls1'] = null;
+
+                $aggregated[] = array(
+                    'classifier' => $name,
+                    'textCoverage' => $current['textCoverage'],
+                    'classes' => $current['cls1']
+                );
+            }
+
+            return json_encode($aggregated);
+        }
+
+        return $this->responseRaw;
     }
 }

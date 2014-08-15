@@ -24,11 +24,11 @@ use nv\semtools\Common;
 class UclassifyRequest extends Common\ApiRequestAbstract
 {
     /**
-     * The classifier to use for classification
+     * The classifiers to use for classification
      *
      * @var string
      */
-    private $classifier;
+    private $classifiers;
 
     /**
      * Response format
@@ -48,14 +48,16 @@ class UclassifyRequest extends Common\ApiRequestAbstract
      * Constructor
      *
      * @param string $textData Text to classify
-     * @param string $classifier
+     * @param array  $classifiers
      */
-    public function __construct($textData, $classifier)
+    public function __construct($textData, array $classifiers)
     {
         parent::__construct($textData);
         $this->responseFormat = 'xml';
         $this->apiVersion = '1.0';
-        $this->classifier = $classifier;
+        $this->classifiers = $classifiers;
+        // @todo Enable multiple classifiers:
+        // classifiers array, foreach through and classify by each entry
     }
 
     /**
@@ -71,7 +73,7 @@ class UclassifyRequest extends Common\ApiRequestAbstract
     /**
      * Get API version
      *
-     * @return mixed
+     * @return string
      */
     public function getApiVersion()
     {
@@ -81,21 +83,44 @@ class UclassifyRequest extends Common\ApiRequestAbstract
     /**
      * Set classifier
      *
-     * @param $classifier
+     * @param array $classifiers
      */
-    public function setClassifier($classifier)
+    public function setClassifiers(array $classifiers)
     {
-        $this->classifier = $classifier;
+        $this->classifiers = $classifiers;
     }
 
     /**
-     * Get classifier
+     * Get classifiers
      *
-     * @return mixed
+     * @return array|string
      */
-    public function getClassifier()
+    public function getClassifiers()
     {
-        return $this->classifier;
+        return $this->classifiers;
+    }
+
+    /**
+     * @param $classifier
+     *
+     * @return $this
+     */
+    public function addClassifier($classifier)
+    {
+        if (! in_array($classifier, $this->classifiers)) {
+            $this->classifiers[] = $classifier;
+        }
+
+        return $this;
+    }
+
+    public function removeClassifier($classifier)
+    {
+        if (in_array($classifier, $this->classifiers)) {
+            unset($this->classifiers[$classifier]);
+        }
+
+        return $this;
     }
 
     /**

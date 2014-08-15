@@ -127,36 +127,43 @@ class UclassifyReader extends ApiReaderAbstract
      */
     protected function executeRequest()
     {
-        $classifier = explode('/', $this->request->getClassifier());
+        // @todo encode response add to array, pass to response
 
-        if (!$this->classifierExists($this->request->getClassifier())) {
-            throw new Exception\ServiceReaderException("Classifier {$this->request->getClassifier()} does not exist");
+        $result = array();
+
+        foreach ($this->request->getClassifiers() as $classifierString) {
+            $classifier = explode('/', $classifierString);
+
+            if (! $this->classifierExists($classifierString)) {
+                throw new Exception\ServiceReaderException("Classifier {$classifierString} does not exist");
+            }
+
+            $queryURL = sprintf(
+                $this->apiQueryStringRequestFormat,
+                $this->apiEndpoint,
+                rawurlencode($classifier[0]),
+                rawurlencode($classifier[1]),
+                urlencode($this->apiKey),
+                urlencode($this->request->getTextData()),
+                $this->apiVersion,
+                strtolower($this->request->getResponseFormat()) !== 'xml' ?
+                "&output={$this->request->getResponseFormat()}" : null
+            );
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $queryURL);
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            if (strpos($response, "<Exception>") !== false) {
+                preg_match("/<Exception\>(.*)<\/Exception>/mu", $response, $matches);
+                throw new Exception\ServiceReaderException($matches[1]);
+            }
+
+            $result[$classifier[1]] = $response;
         }
-
-        $queryURL = sprintf(
-            $this->apiQueryStringRequestFormat,
-            $this->apiEndpoint,
-            rawurlencode($classifier[0]),
-            rawurlencode($classifier[1]),
-            urlencode($this->apiKey),
-            urlencode($this->request->getTextData()),
-            $this->apiVersion,
-            strtolower($this->request->getResponseFormat()) !== 'xml' ?
-            "&output={$this->request->getResponseFormat()}" : null
-        );
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $queryURL);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        if (strpos($response, "<Exception>") !== false) {
-            preg_match("/<Exception\>(.*)<\/Exception>/mu", $response, $matches);
-            throw new Exception\ServiceReaderException($matches[1]);
-        }
-
-        return new UclassifyResponse($response);
+        return new UclassifyResponse($result, $this->request);
     }
 
     /**
