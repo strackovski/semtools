@@ -21,12 +21,12 @@ use nv\semtools\Exception\ServiceReaderException;
  *
  * @package nv\semtools\Classifiers\uClassify
  * @author Vladimir Stračkovski <vlado@nv3.org>
- * @todo Refactor to Interpreter classes
  */
 class UclassifyResponse extends ApiResponseAbstract
 {
     /**
-     * Iterate through response data and aggregate each classifier's response
+     * Iterate through response data and aggregate each classifier's response.
+     * Return the aggregated resultset in the specified output format (json|xml).
      *
      * @return mixed|string
      * @throws \nv\semtools\Exception\ServiceReaderException
