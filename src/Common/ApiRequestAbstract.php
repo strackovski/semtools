@@ -14,7 +14,7 @@ namespace nv\semtools\Common;
 use nv\semtools;
 
 /**
- * Base ApiRequest Class
+ * Abstract Class ApiRequest
  *
  * @package nv\semtools\Common
  * @author Vladimir Stračkovski <vlado@nv3.org>

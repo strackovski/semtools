@@ -15,7 +15,7 @@ use nv\semtools\Common\ReaderInterface;
 use nv\semtools\Common\RequestInterface;
 
 /**
- * Class ApiReader
+ * Abstract Class ApiReader
  *
  * Base type for classes that perform read requests to API services.
  *
