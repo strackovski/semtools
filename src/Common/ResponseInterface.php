@@ -22,7 +22,7 @@ use \nv\semtools;
 interface ResponseInterface
 {
     /**
-     * Return raw response data
+     * Return response data
      *
      * @return mixed
      */

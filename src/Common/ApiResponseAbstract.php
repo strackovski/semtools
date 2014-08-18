@@ -22,16 +22,23 @@ use nv\semtools;
 abstract class ApiResponseAbstract implements ResponseInterface
 {
     /**
-     * The response returned by API
+     * Response as processed by user configuration
      *
      * @var string Response data
      */
     protected $response;
 
+    /**
+     * Response as returned from the API service
+     *
+     * @var mixed Raw response data
+     */
     protected $responseRaw;
 
     /**
-     * @var null
+     * The request to process
+     *
+     * @var ApiRequestAbstract
      */
     protected $request;
 

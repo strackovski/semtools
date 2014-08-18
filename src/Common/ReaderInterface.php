@@ -22,7 +22,7 @@ namespace nv\semtools\Common;
 interface ReaderInterface
 {
     /**
-     * Read API with provided request
+     * Execute API call as defined in the request object
      *
      * @param RequestInterface $request Request parameters
      *
