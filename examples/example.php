@@ -26,23 +26,21 @@ $content = '';
 // Instantiate the reader with your API key (provided by uClassify)
 $classifier = new uClassify\UclassifyReader('YOUR_API_KEY');
 
-// Create a new request with the text to be classified and the classifier to use
-$classifierRequest = new uClassify\UclassifyRequest(
-    'My happy text',
-    'prfekt/Myers Briggs Attitude'
+// Execute and return the response
+$classifierResponse = $classifier->read(
+    new uClassify\UclassifyRequest(
+        'My happy text',
+        'prfekt/Myers Briggs Attitude'
+    )
 );
-
-// Execute and return the request
-$classifierResponse = $classifier->read($classifierRequest);
-echo $classifierResponse->getResponse();
+// Get response from classifier
+$classifierResponse->getResponse();
 
 // Annotation
 $annotator = new OpenCalais\OpenCalaisReader('YOUR_API_KEY');
-$annotatorRequest = new OpenCalais\OpenCalaisRequest($content);
-$annotatorResponse = $annotator->read($annotatorRequest);
+$annotatorResponse = $annotator->read(
+    new OpenCalais\OpenCalaisRequest($content)
+);
 
-// To get the raw response
+// Get response from annotator
 $annotatorResponse->getResponse();
-
-// To get the response parsed to php array
-print_r($annotatorResponse->getEntities());

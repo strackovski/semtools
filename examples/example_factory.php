@@ -12,6 +12,7 @@ include dirname(dirname(__FILE__)) . '/vendor/autoload.php';
 
 use nv\semtools\Classifiers\uClassify;
 use nv\semtools\Annotators\OpenCalais;
+use nv\semtools\Factory\SemtoolsFactory;
 
 /*
  *
@@ -21,7 +22,7 @@ use nv\semtools\Annotators\OpenCalais;
  *
  */
 
-$content = 'The preRemove event occurs for a given entity before the respective EntityManager remove operation for that entity is executed. It is not called for a DQL DELETE statement.';
+$content = "";
 
 // Classification
 $classifierOptions = array(
@@ -31,14 +32,20 @@ $classifierOptions = array(
     'options' => array()
 );
 
-$classifier = \nv\semtools\Factory\SemtoolsFactory::create($classifierOptions);
+$classifier = SemtoolsFactory::create($classifierOptions);
 $classifierRequest = new uClassify\UclassifyRequest(
-    'My happy text',
-    'prfekt/Myers Briggs Attitude'
+    $content,
+    array(
+        'prfekt/Myers Briggs Attitude',
+        'prfekt/Mood',
+        'uclassify/Ageanalyzer'
+    )
 );
+$classifierRequest->setResponseFormat('json');
 $classifierResponse = $classifier->read($classifierRequest);
-echo $classifierResponse->getResponse();
 
+// Get classifier response
+$classifierResponse->getResponse();
 
 // Annotation
 $annotatorOptions = array(
@@ -48,12 +55,10 @@ $annotatorOptions = array(
     'options' => array()
 );
 
-$annotator = \nv\semtools\Factory\SemtoolsFactory::create($annotatorOptions);
+$annotator = SemtoolsFactory::create($annotatorOptions);
 $annotatorRequest = new OpenCalais\OpenCalaisRequest($content);
+$annotatorRequest->setOutputFormat('xml/rdf');
 $annotatorResponse = $annotator->read($annotatorRequest);
 
-// To get the raw response
+// Get annotator response
 $annotatorResponse->getResponse();
-
-// To get the response parsed to php array
-print_r($annotatorResponse->getEntities());
