@@ -36,7 +36,6 @@ class DataUpdater
     {
         $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
-        // @todo [0.0.4] Cache
         $dom->loadHTML(file_get_contents('http://www.uclassify.com/browse'));
 
         $xp = new \DOMXPath($dom);

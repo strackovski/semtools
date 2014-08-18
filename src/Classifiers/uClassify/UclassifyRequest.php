@@ -56,8 +56,6 @@ class UclassifyRequest extends Common\ApiRequestAbstract
         $this->responseFormat = 'xml';
         $this->apiVersion = '1.0';
         $this->classifiers = $classifiers;
-        // @todo Enable multiple classifiers:
-        // classifiers array, foreach through and classify by each entry
     }
 
     /**
