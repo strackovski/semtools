@@ -16,15 +16,16 @@ use \nv\semtools\Annotators;
 class SemtoolsFactory
 {
     /**
-     * Instantiate reader with predefined options
+     * Instantiate reader with predefined options. Parameters must be provided
+     * as array:
+     * array(
+     *      'type' => 'classifier/annotator',
+     *      'provider' => 'opencalais', // optional
+     *      'api_key' => YOUR_API_KEY,
+     *      'options' => array() // optional, additional options
+     * );
      *
      * @param array $options
-     *         $options = array(
-     *              'type' => 'classifier/annotator',
-     *              'provider' => 'opencalais', // optional
-     *              'api_key' => '',
-     *              'options' => array() // optional
-     *         );
      *
      * @throws \InvalidArgumentException
      * @return Annotators\OpenCalais\OpenCalaisReader|Classifiers\uClassify\UclassifyReader
@@ -37,8 +38,8 @@ class SemtoolsFactory
 
         // Currently supported types and providers
         $supportedProviders = array(
-            'classifier' => array('uclassify'),
-            'annotator' => array('opencalais')
+            'annotator' => array('opencalais'),
+            'classifier' => array('uclassify')
         );
 
         if (! array_key_exists('type', $options)) {
@@ -48,7 +49,6 @@ class SemtoolsFactory
         }
 
         $options['type'] = strtolower($options['type']);
-
         if (! array_key_exists($options['type'], $supportedProviders)) {
             throw new \InvalidArgumentException("Invalid type {$options['type']}.");
         }
@@ -62,7 +62,6 @@ class SemtoolsFactory
             }
         } else {
             $options['provider'] = strtolower($options['provider']);
-
             if (! in_array($options['provider'], $supportedProviders[$options['type']])) {
                 throw new \InvalidArgumentException(
                     "Provider '{$options['provider']}' invalid or not supported for type '{$options['type']}'"
