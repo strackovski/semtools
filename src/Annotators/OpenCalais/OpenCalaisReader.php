@@ -79,6 +79,10 @@ class OpenCalaisReader extends Common\ApiReaderAbstract
      */
     protected function executeRequest()
     {
+        if (!is_callable('curl_init')) {
+            throw new Exception\ServiceReaderException('cURL not found.');
+        }
+
         $options  = 'licenseID='  . urlencode($this->apiKey);
         $options .= '&paramsXML=' . urlencode($this->request->generateXMLRequestString());
         $options .= '&content='   . urlencode($this->request->getTextData());
