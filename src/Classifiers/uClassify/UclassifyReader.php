@@ -150,6 +150,10 @@ class UclassifyReader extends ApiReaderAbstract
                 "&output={$this->request->getResponseFormat()}" : null
             );
 
+            if (!is_callable('curl_init')) {
+                throw new Exception\ServiceReaderException('cURL not found.');
+            }
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_URL, $queryURL);
